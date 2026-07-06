@@ -36,7 +36,7 @@ export default function HomeScreen() {
   // তোমার ফিচারগুলোর জন্য একটি সাজানো ডাটা লিস্ট
   const features = [
     { id: "1", name: "Daily Check In", desc: "Daily Rewards", icon: CalendarCheck, color: "#3b82f6", target: "DailyCheckIn" },
-    { id: "2", name: "Spin Wheel", desc: "Lucky Spin", icon: Sparkles, color: "#ec4899", target: "LuckySpin" },
+    { id: "2", name: "Spin Wheel", desc: "Lucky Spin", icon: Sparkles, color: "#ec4899", target: "LuckySpin" }, // 🔑 এই টার্গেটটি AppNavigator এর সাথে মিলানো
     { id: "3", name: "Reward Ads", desc: "Watch & Earn", icon: Tv, color: "#10b981", target: "RewardAds" },
     { id: "4", name: "Scratch Card", desc: "Test Your Luck", icon: Ticket, color: "#f59e0b", target: "ScratchCard" },
     { id: "5", name: "Quiz", desc: "Play & Win", icon: HelpCircle, color: "#8b5cf6", target: "Quiz" },
@@ -48,7 +48,7 @@ export default function HomeScreen() {
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar barStyle="light-content" backgroundColor="#090d16" />
-      
+
       {/* 🔹 1. Top Profile & Notification Header */}
       <View style={styles.header}>
         <View style={styles.profileZone}>
@@ -68,7 +68,7 @@ export default function HomeScreen() {
       </View>
 
       <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.scrollContent}>
-        
+
         {/* 🔹 2. Premium Wallet/Balance Card */}
         <View style={styles.balanceCard}>
           <View style={styles.balanceTop}>
@@ -104,10 +104,11 @@ export default function HomeScreen() {
                 key={item.id}
                 style={styles.gridItem}
                 onPress={() => {
-                  if(item.target) {
-                    // যদি নেভিগেশন সেট করা থাকে
-                    // navigation.navigate(item.target);
-                    alert(`${item.name} Clicked`);
+                  // 🔑 ডবল onPress ডিলিট করে এখানে একদম ফ্রেশ রিয়েল নেভিগেশন সেট করে দেওয়া হলো
+                  if (item.target) {
+                    navigation.navigate(item.target);
+                  } else {
+                    alert(`${item.name} page coming soon!`);
                   }
                 }}
               >
@@ -130,11 +131,11 @@ export default function HomeScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#090d16", // MegaMinerApp মেইন ব্যাকগ্রাউন্ড থিম
+    backgroundColor: "#090d16", 
   },
   scrollContent: {
     paddingHorizontal: 20,
-    paddingBottom: 100, // বটম নেভিগেশনের জন্য এক্সট্রা স্পেস
+    paddingBottom: 100, 
   },
   header: {
     flexDirection: "row",
@@ -245,7 +246,7 @@ const styles = StyleSheet.create({
     marginTop: 4,
   },
   bannerContainer: {
-    backgroundColor: "#4f46e5", // প্রিমিয়াম পার্পল কালার
+    backgroundColor: "#4f46e5", 
     borderRadius: 20,
     padding: 16,
     marginVertical: 20,
@@ -280,7 +281,7 @@ const styles = StyleSheet.create({
   },
   gridItem: {
     backgroundColor: "#111827",
-    width: "48%", // ২ কলাম গ্রিড লেআউট
+    width: "48%", 
     borderRadius: 20,
     padding: 16,
     marginBottom: 15,

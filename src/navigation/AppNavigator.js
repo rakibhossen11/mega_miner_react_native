@@ -1,85 +1,16 @@
-// import React from "react";
-// import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-// import { useSelector } from "react-redux";
-// import { StyleSheet, Platform } from "react-native";
-// import { Activity, Users, Wallet, Home as HomeIcon } from "lucide-react-native";
-
-// import LoginScreen from "../screens/LoginScreen";
-// import HomeScreen from "../screens/HomeScreen"; // হোম স্ক্রিন
-// import ReferralScreen from "../screens/ReferralScreen";
-// import WithdrawScreen from "../screens/WithdrawScreen";
-
-// const Tab = createBottomTabNavigator();
-
-// export default function AppNavigator() {
-//   const isAuthenticated = useSelector((state) => state.wallet.isAuthenticated);
-
-//   if (!isAuthenticated) {
-//     return <LoginScreen />;
-//   }
-
-//   return (
-//     <Tab.Navigator
-//       screenOptions={{
-//         headerShown: false,
-//         tabBarActiveTintColor: "#f59e0b",
-//         tabBarInactiveTintColor: "#64748b",
-//         tabBarStyle: styles.tabBar,
-//         tabBarLabelStyle: styles.tabLabel,
-//       }}
-//     >
-//       <Tab.Screen 
-//         name="Home" 
-//         component={HomeScreen} 
-//         options={{ tabBarIcon: ({ color }) => <HomeIcon color={color} size={20} /> }} 
-//       />
-//       {/* <Tab.Screen 
-//         name="Mining" 
-//         component={MiningScreen} 
-//         options={{ tabBarIcon: ({ color }) => <Activity color={color} size={20} /> }} 
-//       /> */}
-//       <Tab.Screen 
-//         name="Network" 
-//         component={ReferralScreen} 
-//         options={{ tabBarIcon: ({ color }) => <Users color={color} size={20} /> }} 
-//       />
-//       <Tab.Screen 
-//         name="Finance" 
-//         component={WithdrawScreen} 
-//         options={{ tabBarIcon: ({ color }) => <Wallet color={color} size={20} /> }} 
-//       />
-//     </Tab.Navigator>
-//   );
-// }
-
-// const styles = StyleSheet.create({
-//   tabBar: {
-//     backgroundColor: '#000000',
-//     borderTopWidth: 0,
-//     height: Platform.OS === 'ios' ? 88 : 74, 
-//     paddingBottom: Platform.OS === 'ios' ? 30 : 20, 
-//     paddingTop: 10,
-//     position: 'absolute',
-//     bottom: 0, left: 0, right: 0,
-//     elevation: 25, zIndex: 100, 
-//   },
-//   tabLabel: { fontSize: 11, fontWeight: '600', marginTop: 2 }
-// });
-
 import React from "react";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { useSelector } from "react-redux";
 import { StyleSheet, Platform } from "react-native";
-// মডার্ন এবং স্পোটিফাই ভাইব-এর আইকন সেট
 import {
   Activity,
   Users,
   Wallet,
-  Music,
-  LayoutGrid,
-  HelpCircle
+  Home as HomeIcon, // 🏠 হোম আইকন যুক্ত করা হলো
 } from "lucide-react-native";
 
+// 📂 সব স্ক্রিন সঠিকভাবে ইমপোর্ট করা হলো
 import LoginScreen from "../screens/LoginScreen";
 import MiningScreen from "../screens/MiningScreen";
 import ReferralScreen from "../screens/ReferralScreen";
@@ -87,10 +18,38 @@ import WithdrawScreen from "../screens/WithdrawScreen";
 import SpinScreen from "../screens/SpinScreen";
 import LeaderboardScreen from "../screens/LeaderboardScreen";
 import HomeScreen from "../screens/HomeScreen";
-// import { createDrawerNavigator } from "@react-navigation/drawer";
+import DailyCheckInScreen from "../screens/DailyCheckInScreen";
+// import ProfileScreen from "../screens/ProfileScreen"; // 🔑 প্রোফাইল স্ক্রিন ইমপোর্ট মিসিং ছিল
 
 const Tab = createBottomTabNavigator();
-// const Drawer = createDrawerNavigator();
+const Stack = createNativeStackNavigator();
+
+// 🔑 ১. হোম স্ট্যাক (Home Stack)
+// এর ভেতরে থাকা সব পেজে বটম নেভিগেশন বারটি অটোমেটিক দেখা যাবে
+function HomeStackNavigator() {
+  return (
+    <Stack.Navigator
+      screenOptions={{
+        headerStyle: { backgroundColor: "#090d16" },
+        headerTintColor: "#fff",
+        animation: "slide_from_right",
+      }}
+    >
+      <Stack.Screen name="DailyCheckIn" component={DailyCheckInScreen} options={{ title: "Daily Check In" }} />
+      {/* মেইন হোম স্ক্রিন */}
+      <Stack.Screen name="HomeMain" component={HomeScreen} options={{ title: "Mega Miner" }} />
+      
+      {/* 🎡 স্পিন স্ক্রিন (হোম পেজের target: "LuckySpin" এর সাথে মিলানো) */}
+      <Stack.Screen name="LuckySpin" component={SpinScreen} options={{ title: "Lucky Spin" }} />
+      
+      {/* 📊 লিডারবোর্ড স্ক্রিন (হোম পেজের target: "Leaderboard" এর সাথে মিলানো) */}
+      <Stack.Screen name="Leaderboard" component={LeaderboardScreen} options={{ title: "Top Miners" }} />
+      
+      {/* 👤 প্রোফাইল স্ক্রিন */}
+      {/* <Stack.Screen name="Profile" component={ProfileScreen} options={{ title: "My Profile" }} /> */}
+    </Stack.Navigator>
+  );
+}
 
 export default function AppNavigator() {
   const isAuthenticated = useSelector((state) => state.wallet.isAuthenticated);
@@ -100,32 +59,32 @@ export default function AppNavigator() {
   }
 
   return (
-    // <Drawer.Navigator
-    //   drawerContent={(props) => <CustomDrawer {...props} />}
-    //   screenOptions={{
-    //     headerShown: true, // 🔑 Eti 'true' thakle screen-er upore 'Hamburger (3 lines)' menu-ti dekhabe
-    //     headerStyle: { backgroundColor: "#090d16" },
-    //     headerTintColor: "#fff",
-    //     drawerStyle: { width: 280, backgroundColor: "#090d16" },
-    //   }}
-    // >
-    //   {/* 🔑 Nishchit koro ekhane HomeScreen-ti dewa ache */}
-    //   <Drawer.Screen name="Home" component={HomeScreen} />
-    // </Drawer.Navigator>
     <Tab.Navigator
-        screenOptions={{
-            headerShown: false,
-            tabBarActiveTintColor: "#1db954", // 🟢 Spotify Green অথবা গোল্ডেন #f59e0b ব্যবহার করতে পারো
-            tabBarInactiveTintColor: "#b3b3b3", // মডার্ন গ্রে কালার
-            tabBarShowLabel: true, // লেবেল অন রাখা হলো
-            tabBarLabelStyle: styles.tabLabel,
-            tabBarStyle: styles.tabBar,
-        }}
+      screenOptions={{
+        headerShown: false,
+        tabBarActiveTintColor: "#f59e0b", // 🟢 গোল্ডেন কালার (চাইলে স্পোটিফাই গ্রিন #1db954 দিতে পারো)
+        tabBarInactiveTintColor: "#b3b3b3", 
+        tabBarShowLabel: true, 
+        tabBarLabelStyle: styles.tabLabel,
+        tabBarStyle: styles.tabBar,
+      }}
     >
-        {/* 🚀 Mining Tab */}
+        {/* 🏠 ১. মেইন হোম/মাইনিং ট্যাব (এখানে সরাসরি HomeScreen এর বদলে HomeStackNavigator দেওয়া হলো) */}
+        <Tab.Screen
+            name="HomeTab"
+            component={HomeStackNavigator}
+            options={{
+                tabBarLabel: 'Home',
+                tabBarIcon: ({ color, focused }) => (
+                    <HomeIcon color={color} size={focused ? 24 : 20} strokeWidth={focused ? 2.5 : 2} />
+                )
+            }}
+        />
+
+        {/* 🚀 ২. রিয়েল মাইনিং স্ক্রিন ট্যাব (যদি আলাদা পেজ থাকে) */}
         <Tab.Screen
             name="Mining"
-            component={HomeScreen}
+            component={MiningScreen}
             options={{
                 tabBarLabel: 'Mining',
                 tabBarIcon: ({ color, focused }) => (
@@ -134,7 +93,7 @@ export default function AppNavigator() {
             }}
         />
 
-        {/* 🌐 Network / Referral Tab */}
+        {/* 🌐 ৩. Network / Referral Tab */}
         <Tab.Screen
             name="Network"
             component={ReferralScreen}
@@ -146,7 +105,7 @@ export default function AppNavigator() {
             }}
         />
 
-        {/* 💰 Finance / Withdraw Tab */}
+        {/* 💰 ৪. Finance / Withdraw Tab */}
         <Tab.Screen
             name="Finance"
             component={WithdrawScreen}
@@ -157,41 +116,28 @@ export default function AppNavigator() {
                 )
             }}
         />
-
-        <Tab.Screen
-            name="LuckySpin"
-            component={LeaderboardScreen}
-            options={{
-                tabBarLabel: 'Lucky Spin',
-                tabBarIcon: ({ color, focused }) => (
-                    <HelpCircle color={color} size={focused ? 24 : 20} />
-                )
-            }}
-        />
     </Tab.Navigator>
   );
 }
 
+// 🎨 তোমার করা পারফেক্ট বটম বার স্টাইলিং
 const styles = StyleSheet.create({
   tabBar: {
-    backgroundColor: '#000000', // স্পোটিফাই ডার্ক থিম
-    borderTopWidth: 0, // টপ বর্ডার রিমুভ করা হলো
+    backgroundColor: '#000000', 
+    borderTopWidth: 0, 
 
-    // 🔑 মেইন ফিক্স: হাইট এবং নিচের গ্যাপ বাড়ানো হলো যাতে ফোনের ব্যাক বাটনের ওপরে থাকে
-    height: Platform.OS === 'ios' ? 88 : 74, // অ্যান্ড্রয়েডের জন্য হাইট ৭৪ করা হলো
-    paddingBottom: Platform.OS === 'ios' ? 30 : 28, // নিচের সিস্টেম বাটন থেকে ২০ পিক্সেল ওপরে থাকবে
+    height: Platform.OS === 'ios' ? 88 : 74, 
+    paddingBottom: Platform.OS === 'ios' ? 30 : 28, // অ্যান্ড্রয়েডের জন্য ব্যাক বাটন গ্যাপ ফিক্সড
     paddingTop: 10,
 
     position: 'absolute',
-    bottom: 0, // স্ক্রিনের একদম নিচে সেট করা হলো
+    bottom: 0, 
     left: 0,
     right: 0,
 
-    // শ্যাডো এবং এলিভেশন যাতে এটি সব স্ক্রিনের ওপরে ভেসে থাকে
     elevation: 25,
     zIndex: 100,
 
-    // ফোনের ব্যাক বাটনের ব্যাকগ্রাউন্ড কালার যাতে অ্যাপের ভেতরে ঢুকে না যায়, সেজন্য শ্যাডো
     ...Platform.select({
       ios: {
         shadowColor: '#000',
@@ -200,8 +146,7 @@ const styles = StyleSheet.create({
         shadowRadius: 8,
       },
       android: {
-        // অ্যান্ড্রয়েডে কিছু ডিভাইসে সিস্টেম বারের ওপরে মার্জিন দিতে সাহায্য করবে
-        marginBottom: 28,
+        marginBottom: 0, // সিস্টেম বাটন ওভারল্যাপ প্রটেকশন
       },
     })
   },
