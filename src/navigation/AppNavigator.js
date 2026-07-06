@@ -19,6 +19,9 @@ import SpinScreen from "../screens/SpinScreen";
 import LeaderboardScreen from "../screens/LeaderboardScreen";
 import HomeScreen from "../screens/HomeScreen";
 import DailyCheckInScreen from "../screens/DailyCheckInScreen";
+import RewardAdsScreen from "../screens/RewardAdsScreen";
+import ScratchCardScreen from "../screens/ScratchCardScreen";
+import QuizScreen from "../screens/QuizScreen";
 // import ProfileScreen from "../screens/ProfileScreen"; // 🔑 প্রোফাইল স্ক্রিন ইমপোর্ট মিসিং ছিল
 
 const Tab = createBottomTabNavigator();
@@ -35,7 +38,6 @@ function HomeStackNavigator() {
         animation: "slide_from_right",
       }}
     >
-      <Stack.Screen name="DailyCheckIn" component={DailyCheckInScreen} options={{ title: "Daily Check In" }} />
       {/* মেইন হোম স্ক্রিন */}
       <Stack.Screen name="HomeMain" component={HomeScreen} options={{ title: "Mega Miner" }} />
       
@@ -44,6 +46,10 @@ function HomeStackNavigator() {
       
       {/* 📊 লিডারবোর্ড স্ক্রিন (হোম পেজের target: "Leaderboard" এর সাথে মিলানো) */}
       <Stack.Screen name="Leaderboard" component={LeaderboardScreen} options={{ title: "Top Miners" }} />
+      <Stack.Screen name="DailyCheckIn" component={DailyCheckInScreen} options={{ title: "Daily Check In" }} />
+      <Stack.Screen name="RewardAds" component={RewardAdsScreen} options={{ title: "Reward Ads" }} />
+      <Stack.Screen name="ScratchCard" component={ScratchCardScreen} options={{ title: "Scratch Card" }} />
+      <Stack.Screen name="Quiz" component={QuizScreen} options={{ title: "Daily Quiz" }} />
       
       {/* 👤 প্রোফাইল স্ক্রিন */}
       {/* <Stack.Screen name="Profile" component={ProfileScreen} options={{ title: "My Profile" }} /> */}
