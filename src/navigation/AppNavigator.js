@@ -22,6 +22,8 @@ import DailyCheckInScreen from "../screens/DailyCheckInScreen";
 import RewardAdsScreen from "../screens/RewardAdsScreen";
 import ScratchCardScreen from "../screens/ScratchCardScreen";
 import QuizScreen from "../screens/QuizScreen";
+import LuckyDrawScreen from "../screens/LuckyDrawScreen";
+import CouponsScreen from "../screens/CouponsScreen";
 // import ProfileScreen from "../screens/ProfileScreen"; // 🔑 প্রোফাইল স্ক্রিন ইমপোর্ট মিসিং ছিল
 
 const Tab = createBottomTabNavigator();
@@ -50,6 +52,8 @@ function HomeStackNavigator() {
       <Stack.Screen name="RewardAds" component={RewardAdsScreen} options={{ title: "Reward Ads" }} />
       <Stack.Screen name="ScratchCard" component={ScratchCardScreen} options={{ title: "Scratch Card" }} />
       <Stack.Screen name="Quiz" component={QuizScreen} options={{ title: "Daily Quiz" }} />
+      <Stack.Screen name="LuckyDraw" component={LuckyDrawScreen} options={{ title: "Lucky Draw" }} />
+      <Stack.Screen name="Coupons" component={CouponsScreen} options={{ title: "Shop Coupons" }} />
       
       {/* 👤 প্রোফাইল স্ক্রিন */}
       {/* <Stack.Screen name="Profile" component={ProfileScreen} options={{ title: "My Profile" }} /> */}
