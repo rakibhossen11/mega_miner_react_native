@@ -7,6 +7,7 @@ import {
   Activity,
   Users,
   Wallet,
+  PersonStanding,
   Home as HomeIcon, // 🏠 হোম আইকন যুক্ত করা হলো
 } from "lucide-react-native";
 
@@ -24,7 +25,14 @@ import ScratchCardScreen from "../screens/ScratchCardScreen";
 import QuizScreen from "../screens/QuizScreen";
 import LuckyDrawScreen from "../screens/LuckyDrawScreen";
 import CouponsScreen from "../screens/CouponsScreen";
-// import ProfileScreen from "../screens/ProfileScreen"; // 🔑 প্রোফাইল স্ক্রিন ইমপোর্ট মিসিং ছিল
+import NotificationScreen from "../screens/NotificationScreen";
+import ProfileScreen from "../screens/ProfileScreen"; 
+import FAQScreen from "../screens/FAQScreen";
+import PrivacyPolicyScreen from "../screens/PrivacyPolicyScreen";
+import SupportScreen from "../screens/SupportScreen";
+import EditProfileScreen from "../screens/EditProfileScreen";
+import WithdrawHistoryScreen from "../screens/WithdrawHistoryScreen";
+import TransactionScreen from "../screens/TransactionScreen";
 
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
@@ -54,9 +62,25 @@ function HomeStackNavigator() {
       <Stack.Screen name="Quiz" component={QuizScreen} options={{ title: "Daily Quiz" }} />
       <Stack.Screen name="LuckyDraw" component={LuckyDrawScreen} options={{ title: "Lucky Draw" }} />
       <Stack.Screen name="Coupons" component={CouponsScreen} options={{ title: "Shop Coupons" }} />
+      <Stack.Screen name="Notifications" component={NotificationScreen} options={{ title: "Notifications" }} />
       
       {/* 👤 প্রোফাইল স্ক্রিন */}
-      {/* <Stack.Screen name="Profile" component={ProfileScreen} options={{ title: "My Profile" }} /> */}
+      <Stack.Screen name="Profile" component={ProfileScreen} options={{ title: "My Profile" }} />
+    </Stack.Navigator>
+  );
+}
+
+// 👤 ২. নতুন প্রোফাইল স্ট্যাক (এখানে FAQ স্ক্রিনটি যুক্ত করা হলো)
+function ProfileStackNavigator() {
+  return (
+    <Stack.Navigator screenOptions={{ headerStyle: { backgroundColor: "#090d16" }, headerTintColor: "#fff", animation: "slide_from_right" }}>
+      <Stack.Screen name="ProfileMain" component={ProfileScreen} options={{ title: "My Profile" }} />
+      <Stack.Screen name="EditProfile" component={EditProfileScreen} options={{ title: "Edit Profile" }} />
+      <Stack.Screen name="WithdrawHistory" component={WithdrawHistoryScreen} options={{ title: "Withdraw History" }} />
+      <Stack.Screen name="Transaction" component={TransactionScreen} options={{ title: "Transaction Logs" }} />
+      <Stack.Screen name="FAQ" component={FAQScreen} options={{ title: "FAQ Support" }} />
+      <Stack.Screen name="PrivacyPolicy" component={PrivacyPolicyScreen} options={{ title: "Privacy Policy" }} />
+      <Stack.Screen name="Support" component={SupportScreen} options={{ title: "Help Support" }} />
     </Stack.Navigator>
   );
 }
@@ -126,6 +150,17 @@ export default function AppNavigator() {
                 )
             }}
         />
+
+        <Tab.Screen
+            name="Profile"
+            component={ProfileStackNavigator}
+            options={{
+                tabBarLabel: 'Profile',
+                tabBarIcon: ({ color, focused }) => (
+                    <PersonStanding color={color} size={focused ? 24 : 20} strokeWidth={focused ? 2.5 : 2} />
+                )
+            }}
+        />
     </Tab.Navigator>
   );
 }
@@ -156,7 +191,7 @@ const styles = StyleSheet.create({
         shadowRadius: 8,
       },
       android: {
-        marginBottom: 0, // সিস্টেম বাটন ওভারল্যাপ প্রটেকশন
+        marginBottom: 20, // সিস্টেম বাটন ওভারল্যাপ প্রটেকশন
       },
     })
   },

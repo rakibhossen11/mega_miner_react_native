@@ -60,7 +60,7 @@ export default function HomeScreen() {
             <Text style={styles.userName}>{userStats.name}</Text>
           </View>
         </View>
-        <TouchableOpacity style={styles.notificationButton} onPress={() => alert('Notifications Clicked')}>
+        <TouchableOpacity style={styles.notificationButton} onPress={() => navigation.navigate("Notifications")}>
           <Bell color="#fff" size={22} />
           {/* নোটিফিকেশন ডট */}
           <View style={styles.notificationDot} />
@@ -131,11 +131,11 @@ export default function HomeScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#090d16", 
+    backgroundColor: "#090d16",
   },
   scrollContent: {
     paddingHorizontal: 20,
-    paddingBottom: 100, 
+    paddingBottom: 100,
   },
   header: {
     flexDirection: "row",
@@ -246,7 +246,7 @@ const styles = StyleSheet.create({
     marginTop: 4,
   },
   bannerContainer: {
-    backgroundColor: "#4f46e5", 
+    backgroundColor: "#4f46e5",
     borderRadius: 20,
     padding: 16,
     marginVertical: 20,
@@ -281,7 +281,7 @@ const styles = StyleSheet.create({
   },
   gridItem: {
     backgroundColor: "#111827",
-    width: "48%", 
+    width: "48%",
     borderRadius: 20,
     padding: 16,
     marginBottom: 15,
