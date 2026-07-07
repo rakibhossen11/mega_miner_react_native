@@ -1,4 +1,5 @@
-import React from "react";
+import React, { useState } from "react";
+import SplashScreen from "../screens/SplashScreen";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { useSelector } from "react-redux";
@@ -87,6 +88,11 @@ function ProfileStackNavigator() {
 
 export default function AppNavigator() {
   const isAuthenticated = useSelector((state) => state.wallet.isAuthenticated);
+  const [showSplash, setShowSplash] = useState(true); // 👈 স্প্ল্যাশ স্ক্রিনের স্টেট
+
+  if (showSplash) {
+    return <SplashScreen onFinish={() => setShowSplash(false)} />;
+  }
 
   if (!isAuthenticated) {
     return <LoginScreen />;
@@ -103,7 +109,6 @@ export default function AppNavigator() {
         tabBarStyle: styles.tabBar,
       }}
     >
-        {/* 🏠 ১. মেইন হোম/মাইনিং ট্যাব (এখানে সরাসরি HomeScreen এর বদলে HomeStackNavigator দেওয়া হলো) */}
         <Tab.Screen
             name="HomeTab"
             component={HomeStackNavigator}
@@ -191,7 +196,7 @@ const styles = StyleSheet.create({
         shadowRadius: 8,
       },
       android: {
-        marginBottom: 20, // সিস্টেম বাটন ওভারল্যাপ প্রটেকশন
+        marginBottom: 32, // সিস্টেম বাটন ওভারল্যাপ প্রটেকশন
       },
     })
   },
