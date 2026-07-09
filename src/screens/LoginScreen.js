@@ -1,13 +1,13 @@
 import React, { useState, useEffect } from "react";
-import { 
-  View, 
-  Text, 
-  TextInput, 
-  TouchableOpacity, 
-  StyleSheet, 
-  ActivityIndicator, 
-  StatusBar,
-  SafeAreaView
+import {
+    View,
+    Text,
+    TextInput,
+    TouchableOpacity,
+    StyleSheet,
+    ActivityIndicator,
+    StatusBar,
+    SafeAreaView
 } from "react-native";
 import { useDispatch } from "react-redux";
 import { setAuth } from "../store/walletSlice";
@@ -15,7 +15,8 @@ import AsyncStorage from "@react-native-async-storage/async-storage"; // 🔑 �
 import { Eye, EyeOff, Mail, Lock, LogIn, Sparkles } from "lucide-react-native";
 import Toast from "react-native-toast-message";
 
-export default function LoginScreen() {
+// 🛠️ এখানে { navigation } প্রপ্সটি যুক্ত করা হয়েছে
+export default function LoginScreen({ navigation }) {
     const dispatch = useDispatch();
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
@@ -51,7 +52,7 @@ export default function LoginScreen() {
                 body: JSON.stringify({ email, password })
             });
             const data = await res.json();
-            
+
             if (res.ok && data.success) {
                 // 💾 লগইন সফল হলে ইমেইলটি লোকাল স্টোরেজে সেভ করে রাখবে
                 await AsyncStorage.setItem("saved_user_email", email);
@@ -71,9 +72,9 @@ export default function LoginScreen() {
     return (
         <SafeAreaView style={styles.container}>
             <StatusBar barStyle="light-content" backgroundColor="#090d16" />
-            
+
             <View style={styles.card}>
-                {/* 🎯 টপ গ্লোয়িং হেডার */}
+                {/* 🎯 টপ গ্লোয়িং হেডার */}
                 <View style={styles.header}>
                     <View style={styles.iconGlow}>
                         <LogIn color="#f59e0b" size={32} />
@@ -97,7 +98,7 @@ export default function LoginScreen() {
                     />
                 </View>
 
-                {/* 🔒 পাসওয়ার্ড ইনপুট ফিল্ড */}
+                {/* 🔒 পাসওয়ার্ড ইনপুট ফিল্ড */}
                 <Text style={styles.inputLabel}>Password</Text>
                 <View style={styles.inputWrapper}>
                     <Lock color="#64748b" size={18} style={styles.icon} />
@@ -127,22 +128,30 @@ export default function LoginScreen() {
                     )}
                 </TouchableOpacity>
             </View>
+
+            <View style={styles.footer}>
+                <Text style={styles.footerText}>Don't have an account? </Text>
+                <TouchableOpacity onPress={() => navigation.navigate('Register')}>
+                    <Text style={styles.registerLink}>Register Now</Text>
+                </TouchableOpacity>
+            </View>
+
         </SafeAreaView>
     );
 }
 
 const styles = StyleSheet.create({
-    container: { 
-        flex: 1, 
-        backgroundColor: "#090d16", 
-        justifyContent: "center", 
-        padding: 20 
+    container: {
+        flex: 1,
+        backgroundColor: "#090d16",
+        justifyContent: "center",
+        padding: 20
     },
-    card: { 
-        backgroundColor: "#111827", 
-        padding: 26, 
-        borderRadius: 28, 
-        borderWidth: 1, // 🛠️ borderWith ফিক্স করা হয়েছে
+    card: {
+        backgroundColor: "#111827",
+        padding: 26,
+        borderRadius: 28,
+        borderWidth: 1, 
         borderColor: "#1e293b",
         shadowColor: "#f59e0b",
         shadowOffset: { width: 0, height: 10 },
@@ -150,10 +159,10 @@ const styles = StyleSheet.create({
         shadowRadius: 20,
         elevation: 5,
     },
-    header: { 
-        alignItems: "center", 
-        marginBottom: 28, 
-        justifyContent: "center" 
+    header: {
+        alignItems: "center",
+        marginBottom: 28,
+        justifyContent: "center"
     },
     iconGlow: {
         backgroundColor: "#f59e0b10",
@@ -163,9 +172,9 @@ const styles = StyleSheet.create({
         borderWidth: 1,
         borderColor: "#f59e0b20",
     },
-    title: { 
-        color: "#fff", 
-        fontSize: 22, 
+    title: {
+        color: "#fff",
+        fontSize: 22,
         fontWeight: "900",
         letterSpacing: 0.5,
     },
@@ -185,35 +194,35 @@ const styles = StyleSheet.create({
         textTransform: "uppercase",
         letterSpacing: 0.5,
     },
-    inputWrapper: { 
-        flexDirection: "row", 
-        alignItems: "center", 
-        backgroundColor: "#020617", 
-        borderWidth: 1, 
-        borderColor: "#1e293b", 
-        borderRadius: 14, 
-        paddingHorizontal: 14, 
-        height: 54, 
-        marginBottom: 20 
+    inputWrapper: {
+        flexDirection: "row",
+        alignItems: "center",
+        backgroundColor: "#020617",
+        borderWidth: 1,
+        borderColor: "#1e293b",
+        borderRadius: 14,
+        paddingHorizontal: 14,
+        height: 54,
+        marginBottom: 20
     },
-    icon: { 
-        marginRight: 12 
+    icon: {
+        marginRight: 12
     },
-    input: { 
-        flex: 1, 
-        color: "#fff", 
+    input: {
+        flex: 1,
+        color: "#fff",
         fontSize: 14,
         fontWeight: "600",
     },
     eyeIcon: {
         padding: 4,
     },
-    btn: { 
-        backgroundColor: "#f59e0b", 
-        height: 54, 
-        borderRadius: 14, 
-        justifyContent: "center", 
-        alignItems: "center", 
+    btn: {
+        backgroundColor: "#f59e0b",
+        height: 54,
+        borderRadius: 14,
+        justifyContent: "center",
+        alignItems: "center",
         marginTop: 10,
         shadowColor: "#f59e0b",
         shadowOffset: { width: 0, height: 4 },
@@ -229,10 +238,27 @@ const styles = StyleSheet.create({
         flexDirection: "row",
         alignItems: "center",
     },
-    btnText: { 
-        color: "#090d16", 
-        fontSize: 15, 
-        fontWeight: "900", 
-        letterSpacing: 1 
-    }
+    btnText: {
+        color: "#090d16",
+        fontSize: 15,
+        fontWeight: "900",
+        letterSpacing: 1
+    },
+    // 🛠️ এখানে স্টাইল ফরম্যাটটি সুন্দর করা হয়েছে
+    footer: {
+        flexDirection: "row",
+        justifyContent: "center",
+        marginTop: 20,
+        alignItems: "center",
+    },
+    footerText: {
+        color: "#64748b",
+        fontSize: 14,
+    },
+    registerLink: {
+        color: "#f59e0b",
+        fontSize: 14,
+        fontWeight: "600",
+        textDecorationLine: "underline",
+    },
 });

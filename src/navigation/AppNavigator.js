@@ -14,6 +14,7 @@ import {
 
 // 📂 সব স্ক্রিন সঠিকভাবে ইমপোর্ট করা হলো
 import LoginScreen from "../screens/LoginScreen";
+import RegisterScreen from "../screens/RegisterScreen";
 import MiningScreen from "../screens/MiningScreen";
 import ReferralScreen from "../screens/ReferralScreen";
 import WithdrawScreen from "../screens/WithdrawScreen";
@@ -37,6 +38,24 @@ import TransactionScreen from "../screens/TransactionScreen";
 
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
+
+
+// 🔑 Auth Stack (লগইন/রেজিস্ট্রেশন)
+function AuthStackNavigator() {
+  return (
+    <Stack.Navigator
+      screenOptions={{
+        headerStyle: { backgroundColor: "#090d16" },
+        headerTintColor: "#fff",
+        headerShown: false,
+        animation: "slide_from_right",
+      }}
+    >
+      <Stack.Screen name="Login" component={LoginScreen} />
+      <Stack.Screen name="Register" component={RegisterScreen} />
+    </Stack.Navigator>
+  );
+}
 
 // 🔑 ১. হোম স্ট্যাক (Home Stack)
 // এর ভেতরে থাকা সব পেজে বটম নেভিগেশন বারটি অটোমেটিক দেখা যাবে
@@ -87,15 +106,23 @@ function ProfileStackNavigator() {
 }
 
 export default function AppNavigator() {
-  const isAuthenticated = useSelector((state) => state.wallet.isAuthenticated);
+  const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
+  // const isAuthenticated = "false";
+  // console.log(useSelector("error",(state) => state.wallet.isAuthenticated));
+  console.log(isAuthenticated);
   const [showSplash, setShowSplash] = useState(true); // 👈 স্প্ল্যাশ স্ক্রিনের স্টেট
 
   if (showSplash) {
     return <SplashScreen onFinish={() => setShowSplash(false)} />;
   }
 
+   // ইউজার অথেন্টিকেটেড না হলে Auth Stack দেখাবে
+  // if (!isAuthenticated) {
+  //   return <AuthStackNavigator />;
+  // }
+
   if (!isAuthenticated) {
-    return <LoginScreen />;
+    return <AuthStackNavigator />;
   }
 
   return (
