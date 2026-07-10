@@ -10,16 +10,18 @@ import {
   ScrollView,
   KeyboardAvoidingView,
   Platform,
-  StatusBar,
-  SafeAreaView
+  StatusBar
 } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { useDispatch, useSelector } from 'react-redux';
 import { registerUser, clearError } from '../redux/authSlice';
+import { authService } from '../api/authService';
 import { useNavigation } from '@react-navigation/native'; // 🛠️ ১. এই ইমপোর্টটি মিসিং ছিল
 import { Eye, EyeOff, Mail, Lock, User, UserPlus, ArrowLeft } from 'lucide-react-native';
 
 export default function RegisterScreen() {
   const dispatch = useDispatch();
+  console.log(dispatch);
   const navigation = useNavigation(); // ⚡ এখন এটি পারফেক্টলি কাজ করবে
   
   // Redux থেকে স্টেট নেওয়া
@@ -106,11 +108,16 @@ export default function RegisterScreen() {
       email: email,
       password: password
     };
+    console.log("reg page",userData);
 
     try {
-      await dispatch(registerUser(userData)).unwrap();
+      await authService.register(userData);
+      // সফল হলে App.js-এর কন্ডিশন চেক করে অটোমেটিক হোম স্ক্রিনে রিডাইরেক্ট হবে
+      Alert.alert("Success", "Account created successfully! 🎉");
     } catch (err) {
-      console.log('Registration error:', err);
+      // ব্যাকএন্ড বা নেটওয়ার্ক থেকে আসা এরর মেসেজ ডিসপ্লে করা
+      const errorMessage = err.response?.data?.error || "Registration failed. Try again.";
+      Alert.alert("Registration Error", errorMessage);
     }
   };
 
