@@ -7,20 +7,24 @@ import {
     StyleSheet,
     ActivityIndicator,
     StatusBar,
-    SafeAreaView
+    SafeAreaView,
+    Alert
 } from "react-native";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { setAuth } from "../store/walletSlice";
 import AsyncStorage from "@react-native-async-storage/async-storage"; // 🔑 ইমেল সেভ রাখার জন্য
+import { authService } from "../api/authService";
 import { Eye, EyeOff, Mail, Lock, LogIn, Sparkles } from "lucide-react-native";
 import Toast from "react-native-toast-message";
 
 // 🛠️ এখানে { navigation } প্রপ্সটি যুক্ত করা হয়েছে
 export default function LoginScreen({ navigation }) {
     const dispatch = useDispatch();
+    const { loading, error, isAuthenticated } = useSelector((state) => state.auth);
+    // const navigation = useNavigation();
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
-    const [loading, setLoading] = useState(false);
+    // const [loading, setLoading] = useState(false);
     const [showPassword, setShowPassword] = useState(false);
 
     // 🔄 স্ক্রিন ওপেন হলেই চেক করবে আগে কোনো ইমেইল সেভ করা আছে কি না
@@ -40,34 +44,47 @@ export default function LoginScreen({ navigation }) {
     };
 
     const handleLogin = async () => {
-        if (!email || !password) {
-            Toast.show({ type: "error", text1: "Error", text2: "Please fill all fields" });
-            return;
-        }
-        setLoading(true);
-        try {
-            const res = await fetch("http://192.168.0.109:3000/api/auth/login", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ email, password })
-            });
-            const data = await res.json();
+    if (!email || !password) {
+      Alert.alert("Error", "Please fill in all fields.");
+      return;
+    }
+    try {
+      await authService.login(email, password);
+      // সফল হলে App.js-এর কন্ডিশন অনুযায়ী অটোমেটিক হোম স্ক্রিনে নিয়ে যাবে, এখানে রিডাইরেক্ট করতে হবে না
+    } catch (err) {
+      Alert.alert("Login Failed", error || "Invalid credentials");
+    }
+  };
 
-            if (res.ok && data.success) {
-                // 💾 লগইন সফল হলে ইমেইলটি লোকাল স্টোরেজে সেভ করে রাখবে
-                await AsyncStorage.setItem("saved_user_email", email);
+    // const handleLogin = async () => {
+    //     if (!email || !password) {
+    //         Toast.show({ type: "error", text1: "Error", text2: "Please fill all fields" });
+    //         return;
+    //     }
+    //     setLoading(true);
+    //     try {
+    //         const res = await fetch("http://192.168.0.109:3000/api/auth/login", {
+    //             method: "POST",
+    //             headers: { "Content-Type": "application/json" },
+    //             body: JSON.stringify({ email, password })
+    //         });
+    //         const data = await res.json();
 
-                dispatch(setAuth({ userId: data.user.userId, username: data.user.username }));
-                Toast.show({ type: "success", text1: "Welcome Back", text2: data.message });
-            } else {
-                Toast.show({ type: "error", text1: "Failed", text2: data.error });
-            }
-        } catch {
-            Toast.show({ type: "error", text1: "Network Error", text2: "Backend server down" });
-        } finally {
-            setLoading(false);
-        }
-    };
+    //         if (res.ok && data.success) {
+    //             // 💾 লগইন সফল হলে ইমেইলটি লোকাল স্টোরেজে সেভ করে রাখবে
+    //             await AsyncStorage.setItem("saved_user_email", email);
+
+    //             dispatch(setAuth({ userId: data.user.userId, username: data.user.username }));
+    //             Toast.show({ type: "success", text1: "Welcome Back", text2: data.message });
+    //         } else {
+    //             Toast.show({ type: "error", text1: "Failed", text2: data.error });
+    //         }
+    //     } catch {
+    //         Toast.show({ type: "error", text1: "Network Error", text2: "Backend server down" });
+    //     } finally {
+    //         setLoading(false);
+    //     }
+    // };
 
     return (
         <SafeAreaView style={styles.container}>
