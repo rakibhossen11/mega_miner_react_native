@@ -5,11 +5,11 @@ import { authStart, authSuccess, authFailure } from '../redux/authSlice';
 export const authService = {
   // 🔑 লগইন মেথড
   login: async (email, password) => {
-    console.log("auth service",email, password);
+    // console.log("auth service",email, password);
     store.dispatch(authStart()); // লোডিং ট্রু করা
     try {
       const response = await apiClient.post('auth/login', { email, password });
-      console.log("auth service",response);
+      // console.log("auth service",response);
       if (response.data.success) {
         // রেডাক্স স্টোরে ডাটা ও টোকেন স্টোর করা
         store.dispatch(authSuccess({ user: response.data.user, token: response.data.token }));

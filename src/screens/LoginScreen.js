@@ -21,10 +21,8 @@ import Toast from "react-native-toast-message";
 export default function LoginScreen({ navigation }) {
     const dispatch = useDispatch();
     const { loading, error, isAuthenticated } = useSelector((state) => state.auth);
-    // const navigation = useNavigation();
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
-    // const [loading, setLoading] = useState(false);
     const [showPassword, setShowPassword] = useState(false);
 
     // 🔄 স্ক্রিন ওপেন হলেই চেক করবে আগে কোনো ইমেইল সেভ করা আছে কি না
@@ -50,7 +48,6 @@ export default function LoginScreen({ navigation }) {
     }
     try {
       await authService.login(email, password);
-      // সফল হলে App.js-এর কন্ডিশন অনুযায়ী অটোমেটিক হোম স্ক্রিনে নিয়ে যাবে, এখানে রিডাইরেক্ট করতে হবে না
     } catch (err) {
       Alert.alert("Login Failed", error || "Invalid credentials");
     }

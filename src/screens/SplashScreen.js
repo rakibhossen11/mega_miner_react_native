@@ -29,7 +29,7 @@ export default function SplashScreen({ onFinish }) {
       {/* 🔄 নিচে সুন্দর লোডিং বার */}
       <View style={styles.loaderContainer}>
         <ActivityIndicator size="small" color="#f59e0b" />
-        <Text style={styles.loadingText}>Loading Ecosystem...</Text>
+        <Text style={styles.loadingText}>Loading...</Text>
       </View>
     </SafeAreaView>
   );

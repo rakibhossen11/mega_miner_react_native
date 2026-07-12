@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   StyleSheet,
   Text,
@@ -7,8 +7,10 @@ import {
   TouchableOpacity,
   SafeAreaView,
   StatusBar,
+  Alert,
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
+import { userService } from "../api/userService";
 import {
   CalendarCheck,
   Tv,
@@ -22,16 +24,49 @@ import {
   ArrowRight,
   Sparkles
 } from "lucide-react-native";
+import { useSelector } from "react-redux";
 
 export default function HomeScreen() {
   const navigation = useNavigation();
+  const [userData, setUserData] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const { error, isAuthenticated } = useSelector((state) => state.auth);
+  console.log(userData);
+
+  useEffect(() => {
+    const loadUserData = async () => {
+      try {
+        const data = await userService.getUserProfile();
+        setUserData(data);
+        console.log(data);
+        if (data.success) {
+          setUserData(data.data); // 📊 সার্ভার থেকে আসা রিয়েল-টাইম ডাটা সেভ হলো
+        }
+      } catch (error) {
+        Alert.alert("Error", error.error || "ডাটা লোড করতে ব্যর্থ হয়েছে।");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    loadUserData();
+  }, []);
+
+  if (loading) {
+    return (
+      <View style={styles.center}>
+        {/* <ActivityIndicator size="large" color="#00ff00" /> */}
+        <Text style={styles.loadingText}>সার্ভার থেকে আপনার ডাটা লোড হচ্ছে...</Text>
+      </View>
+    );
+  }
 
   // ইউজার ব্যালেন্স (রিয়েল অ্যাপে এটি Redux বা API থেকে আসবে)
-  const userStats = {
-    name: "Alex Mercer",
-    coins: "1,245",
-    usd: "12.45"
-  };
+  // const userData = {
+  //   name: "Alex Mercer",
+  //   coins: "1,245",
+  //   usd: "12.45"
+  // };
 
   // তোমার ফিচারগুলোর জন্য একটি সাজানো ডাটা লিস্ট
   const features = [
@@ -53,11 +88,11 @@ export default function HomeScreen() {
       <View style={styles.header}>
         <View style={styles.profileZone}>
           <View style={styles.avatarPlaceholder}>
-            <Text style={styles.avatarText}>{userStats.name[0]}</Text>
+            <Text style={styles.avatarText}>{userData.full_name[0]}</Text>
           </View>
           <View>
             <Text style={styles.welcomeText}>Welcome back,</Text>
-            <Text style={styles.userName}>{userStats.name}</Text>
+            <Text style={styles.userName}>{userData.full_name}</Text>
           </View>
         </View>
         <TouchableOpacity style={styles.notificationButton} onPress={() => navigation.navigate("Notifications")}>
@@ -81,8 +116,8 @@ export default function HomeScreen() {
               <Text style={styles.membershipText}>PRO</Text>
             </TouchableOpacity>
           </View>
-          <Text style={styles.coinAmount}>{userStats.coins} <Text style={styles.coinUnit}>Coins</Text></Text>
-          <Text style={styles.usdAmount}>≈ ${userStats.usd} USD</Text>
+          <Text style={styles.coinAmount}>{userData.coins} <Text style={styles.coinUnit}>Coins</Text></Text>
+          <Text style={styles.usdAmount}>≈ ${userData.usd} USD</Text>
         </View>
 
         {/* 🔹 3. Membership / Banner Promos */}

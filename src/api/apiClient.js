@@ -1,9 +1,9 @@
 import axios from 'axios';
 import { Platform } from 'react-native';
-import { store } from '../redux/store'; // রেডাক্স স্টোর ইমপোর্ট
+import { store } from '../redux/store'; // 👈 রেডাক্স স্টোর ইমপোর্ট
+import { logout } from '../redux/authSlice';
 
-// অ্যান্ড্রয়েড ইমুলেটর এবং আইওএস/লোকাল আইপির জন্য ডাইনামিক বেস ইউআরএল
-const BASE_URL = Platform.OS === 'android' ? 'http://10.0.2.2:3001/api' : 'http://localhost:3000/api';
+const BASE_URL = Platform.OS === 'android' ? 'http://10.0.2.2:3000/api' : 'http://localhost:3000/api';
 
 const apiClient = axios.create({
   baseURL: BASE_URL,
@@ -11,21 +11,64 @@ const apiClient = axios.create({
   headers: { 'Content-Type': 'application/json' },
 });
 
-// 🔒 Axios Interceptor: প্রতিটা আউটগোয়িং রিকোয়েস্টে রেডাক্স থেকে টোকেনটি অটোমেটিক বসিয়ে দেয়
+// 🔒 Request Interceptor: আউটগোয়িং সব রিকারেন্ট রিকোয়েস্টে হেডার পুশ করে
 apiClient.interceptors.request.use(
   (config) => {
+    // 🎯 রিকোয়েস্ট সেন্ড হওয়ার ঠিক আগের মুহূর্তে রেডাক্স থেকে তাজা টোকেন নেওয়া হচ্ছে
     const state = store.getState();
-    const token = state.auth.token; // রেডাক্স স্টেট থেকে টোকেন রিড
+    const token = state.auth.token; 
     
     if (token) {
-      config.headers.Authorization = `Bearer ${token}`; // Authorization হেডার সেটআপ
+      config.headers.Authorization = `Bearer ${token}`;
     }
     return config;
   },
   (error) => Promise.reject(error)
 );
 
+// 🛡️ Response Interceptor: সার্ভার যদি কখনো টোকেন এক্সপায়ারড (401 বা 403) বলে, তবে অটো লগআউট
+apiClient.interceptors.response.use(
+  (response) => response,
+  (error) => {
+    if (error.response && (error.response.status === 401 || error.response.status === 403)) {
+      console.log("⚠️ Token invalid or expired. Forces logout.");
+      store.dispatch(logout()); // অ্যাপ মেমোরি ও পারসিস্ট ক্লিন করে লগইন স্ক্রিনে পাঠিয়ে দেবে
+    }
+    return Promise.reject(error);
+  }
+);
+
 export default apiClient;
+
+
+// import axios from 'axios';
+// import { Platform } from 'react-native';
+// import { store } from '../redux/store'; // রেডাক্স স্টোর ইমপোর্ট
+
+// // অ্যান্ড্রয়েড ইমুলেটর এবং আইওএস/লোকাল আইপির জন্য ডাইনামিক বেস ইউআরএল
+// const BASE_URL = Platform.OS === 'android' ? 'http://10.0.2.2:3001/api' : 'http://localhost:3000/api';
+
+// const apiClient = axios.create({
+//   baseURL: BASE_URL,
+//   timeout: 10000,
+//   headers: { 'Content-Type': 'application/json' },
+// });
+
+// // 🔒 Axios Interceptor: প্রতিটা আউটগোয়িং রিকোয়েস্টে রেডাক্স থেকে টোকেনটি অটোমেটিক বসিয়ে দেয়
+// apiClient.interceptors.request.use(
+//   (config) => {
+//     const state = store.getState();
+//     const token = state.auth.token; // রেডাক্স স্টেট থেকে টোকেন রিড
+    
+//     if (token) {
+//       config.headers.Authorization = `Bearer ${token}`; // Authorization হেডার সেটআপ
+//     }
+//     return config;
+//   },
+//   (error) => Promise.reject(error)
+// );
+
+// export default apiClient;
 
 
 // import axios from 'axios';
