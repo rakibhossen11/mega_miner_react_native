@@ -31,7 +31,8 @@ export default function HomeScreen() {
   const [userData, setUserData] = useState(null);
   const [loading, setLoading] = useState(true);
   const { error, isAuthenticated } = useSelector((state) => state.auth);
-  console.log(userData);
+  console.log("home screen",isAuthenticated);
+  console.log("home screen",userData);
 
   useEffect(() => {
     const loadUserData = async () => {
@@ -88,11 +89,11 @@ export default function HomeScreen() {
       <View style={styles.header}>
         <View style={styles.profileZone}>
           <View style={styles.avatarPlaceholder}>
-            <Text style={styles.avatarText}>{userData.full_name[0]}</Text>
+            {/* <Text style={styles.avatarText}>{userData.full_name[0]}</Text> */}
           </View>
           <View>
             <Text style={styles.welcomeText}>Welcome back,</Text>
-            <Text style={styles.userName}>{userData.full_name}</Text>
+            {/* <Text style={styles.userName}>{userData.full_name}</Text> */}
           </View>
         </View>
         <TouchableOpacity style={styles.notificationButton} onPress={() => navigation.navigate("Notifications")}>
@@ -116,7 +117,7 @@ export default function HomeScreen() {
               <Text style={styles.membershipText}>PRO</Text>
             </TouchableOpacity>
           </View>
-          <Text style={styles.coinAmount}>{userData.coins} <Text style={styles.coinUnit}>Coins</Text></Text>
+          {/* <Text style={styles.coinAmount}>{userData.available_coin} <Text style={styles.coinUnit}>Coins</Text></Text> */}
           <Text style={styles.usdAmount}>≈ ${userData.usd} USD</Text>
         </View>
 
